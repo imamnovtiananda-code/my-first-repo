@@ -1,68 +1,146 @@
-<script>
-    function searchRecommendation() {
-        const inputField = document.getElementById('searchInput');
-        const input = inputField.value.trim().toLowerCase();
-        const results = document.getElementById('results');
-        
-        results.innerHTML = '';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Recommendation System</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f8; color: #333; }
+        nav { background-color: #1e293b; color: white; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; }
+        nav h1 { font-size: 20px; }
+        nav ul { list-style: none; display: flex; gap: 20px; }
+        nav ul li a { color: white; text-decoration: none; font-weight: bold; }
+        .search-container { display: flex; gap: 10px; }
+        .search-container input { padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
+        .search-container button { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .search-container button#btnSearch { background-color: #0284c7; color: white; }
+        .search-container button#btnClear { background-color: #ef4444; color: white; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        section { margin-bottom: 40px; }
+        h2 { margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
+        .card-grid { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+        .card { border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; width: 280px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
+        .card h3 { margin-top: 10px; font-size: 18px; }
+        .card p { margin-top: 5px; font-size: 14px; color: #64748b; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px; }
+        .team-card { background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; }
+        .results-container { margin-top: 20px; }
+    </style>
+</head>
+<body>
 
-        if (input.includes('country') || input.includes('negara')) {
-            results.innerHTML = `
-                <p>Hasil pencarian untuk: <strong>${input}</strong></p>
-                <div class="card-grid">
-                    <div class="card">
-                        <img src="https://picsum.photos/id/1029/400/250" alt="Japan">
-                        <h3>Jepang (Japan)</h3>
-                        <p>Negara dengan perpaduan budaya tradisional dan modernitas teknologi yang menakjubkan.</p>
-                    </div>
-                    <div class="card">
-                        <img src="https://picsum.photos/id/1047/400/250" alt="Australia">
-                        <h3>Australia</h3>
-                        <p>Negara benua dengan keindahan alam luar biasa, pantai eksotis, dan keanekaragaman hayati.</p>
-                    </div>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <h1>Travel Recommendation</h1>
+        </div>
+        <ul>
+            <li><a href="#home">Rumah</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Enter beach, temple, or country">
+            <button id="btnSearch" onclick="searchRecommendation()">Search</button>
+            <button id="btnClear" onclick="clearSearch()">Clear</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home">
+            <h2>Selamat Datang di Travel Recommendation System</h2>
+            <p>Temukan destinasi wisata impian Anda berdasarkan rekomendasi kategori pilihan kami.</p>
+            <div id="results" class="results-container"></div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Kami adalah tim pengembang yang berdedikasi untuk memberikan rekomendasi tempat wisata terbaik di seluruh dunia bagi para pelancong.</p>
+            <h3 style="margin-top: 20px;">Tim Kami</h3>
+            <div class="team-grid">
+                <div class="team-card">
+                    <h4>Imam Novtiananda</h4>
+                    <p>Lead Developer</p>
                 </div>
-            `;
-        } else if (input.includes('temple') || input.includes('candi')) {
-            results.innerHTML = `
-                <p>Hasil pencarian untuk: <strong>${input}</strong></p>
-                <div class="card-grid">
-                    <div class="card">
-                        <img src="https://picsum.photos/id/1040/400/250" alt="Candi Borobudur">
-                        <h3>Candi Borobudur</h3>
-                        <p>Candi Buddha terbesar di dunia yang terletak di Magelang, Indonesia.</p>
-                    </div>
-                    <div class="card">
-                        <img src="https://picsum.photos/id/1043/400/250" alt="Angkor Wat">
-                        <h3>Angkor Wat</h3>
-                        <p>Kompleks candi Hindu-Buddha kuno yang luas di Kamboja.</p>
-                    </div>
+                <div class="team-card">
+                    <h4>Tim Anggota</h4>
+                    <p>UI/UX & Content</p>
                 </div>
-            `;
-        } else if (input.includes('beach') || input.includes('pantai')) {
-            results.innerHTML = `
-                <p>Hasil pencarian untuk: <strong>${input}</strong></p>
-                <div class="card-grid">
-                    <div class="card">
-                        <img src="https://picsum.photos/id/1015/400/250" alt="Bora Bora Beach">
-                        <h3>Bora Bora Beach</h3>
-                        <p>Pantai indah dengan air laut jernih dan pemandangan luar biasa di Polynesia Prancis.</p>
-                    </div>
-                    <div class="card">
-                        <img src="https://picsum.photos/id/1039/400/250" alt="Copacabana Beach">
-                        <h3>Copacabana Beach</h3>
-                        <p>Pantai terkenal di Rio de Janeiro dengan pasir putih dan suasana meriah.</p>
-                    </div>
-                </div>
-            `;
-        } else if (input === "") {
-            results.innerHTML = "<p>Silakan masukkan kata kunci pencarian (contoh: <strong>country</strong>, <strong>temple</strong>, atau <strong>beach</strong>).</p>";
-        } else {
-            results.innerHTML = `<p>Tidak ditemukan rekomendasi untuk <strong>${input}</strong>.</p>`;
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Ada pertanyaan? Silakan hubungi kami melalui form di bawah ini.</p>
+        </section>
+    </div>
+
+    <script>
+        function searchRecommendation() {
+            var inputField = document.getElementById('searchInput');
+            var input = inputField.value.toLowerCase().trim();
+            var results = document.getElementById('results');
+            
+            results.innerHTML = '';
+
+            if (input.indexOf('country') !== -1 || input.indexOf('negara') !== -1) {
+                results.innerHTML = '<p>Hasil pencarian untuk: <strong>' + input + '</strong></p>' +
+                    '<div class="card-grid">' +
+                        '<div class="card">' +
+                            '<img src="https://picsum.photos/id/1029/400/250" alt="Jepang">' +
+                            '<h3>Jepang (Japan)</h3>' +
+                            '<p>Negara dengan perpaduan budaya tradisional dan modernitas teknologi yang menakjubkan.</p>' +
+                        '</div>' +
+                        '<div class="card">' +
+                            '<img src="https://picsum.photos/id/1047/400/250" alt="Australia">' +
+                            '<h3>Australia</h3>' +
+                            '<p>Negara benua dengan keindahan alam luar biasa, pantai eksotis, dan keanekaragaman hayati.</p>' +
+                        '</div>' +
+                    '</div>';
+            } else if (input.indexOf('temple') !== -1 || input.indexOf('candi') !== -1) {
+                results.innerHTML = '<p>Hasil pencarian untuk: <strong>' + input + '</strong></p>' +
+                    '<div class="card-grid">' +
+                        '<div class="card">' +
+                            '<img src="https://picsum.photos/id/1040/400/250" alt="Candi Borobudur">' +
+                            '<h3>Candi Borobudur</h3>' +
+                            '<p>Candi Buddha terbesar di dunia yang terletak di Magelang, Indonesia.</p>' +
+                        '</div>' +
+                        '<div class="card">' +
+                            '<img src="https://picsum.photos/id/1043/400/250" alt="Angkor Wat">' +
+                            '<h3>Angkor Wat</h3>' +
+                            '<p>Kompleks candi Hindu-Buddha kuno yang luas di Kamboja.</p>' +
+                        '</div>' +
+                    '</div>';
+            } else if (input.indexOf('beach') !== -1 || input.indexOf('pantai') !== -1) {
+                results.innerHTML = '<p>Hasil pencarian untuk: <strong>' + input + '</strong></p>' +
+                    '<div class="card-grid">' +
+                        '<div class="card">' +
+                            '<img src="https://picsum.photos/id/1015/400/250" alt="Bora Bora Beach">' +
+                            '<h3>Bora Bora Beach</h3>' +
+                            '<p>Pantai indah dengan air laut jernih dan pemandangan luar biasa di Polynesia Prancis.</p>' +
+                        '</div>' +
+                        '<div class="card">' +
+                            '<img src="https://picsum.photos/id/1039/400/250" alt="Copacabana Beach">' +
+                            '<h3>Copacabana Beach</h3>' +
+                            '<p>Pantai terkenal di Rio de Janeiro dengan pasir putih dan suasana meriah.</p>' +
+                        '</div>' +
+                    '</div>';
+            } else if (input === "") {
+                results.innerHTML = "<p>Silakan masukkan kata kunci pencarian (contoh: <strong>country</strong>, <strong>temple</strong>, atau <strong>beach</strong>).</p>";
+            } else {
+                results.innerHTML = "<p>Tidak ditemukan rekomendasi untuk <strong>" + input + "</strong>.</p>";
+            }
         }
-    }
 
-    function clearSearch() {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('results').innerHTML = '';
-    }
-</script>
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('results').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
