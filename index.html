@@ -1,27 +1,219 @@
-<script>
-    function searchRecommendation() {
-        const input = document.getElementById('searchInput').value.toLowerCase();
-        const results = document.getElementById('results');
-        
-        if (input.includes('beach') || input.includes('pantai')) {
-            results.innerHTML = `
-                <div style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
-                    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; width: 250px; background: #fff;">
-                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" alt="Bora Bora" style="width: 100%; height: 150px; object-fit: cover; border-radius: 6px;">
-                        <h3 style="margin-top: 10px;">Bora Bora</h3>
-                        <p>Pantai indah dengan air laut jernih dan pemandangan luar biasa.</p>
-                    </div>
-                    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; width: 250px; background: #fff;">
-                        <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400" alt="Copacabana" style="width: 100%; height: 150px; object-fit: cover; border-radius: 6px;">
-                        <h3 style="margin-top: 10px;">Copacabana</h3>
-                        <p>Pantai terkenal di Rio de Janeiro dengan suasana yang meriah.</p>
-                    </div>
-                </div>
-            `;
-        } else if (input.trim() === "") {
-            results.innerHTML = "<p>Silakan masukkan kata kunci pencarian.</p>";
-        } else {
-            results.innerHTML = `<p>Tidak ditemukan rekomendasi untuk <strong>${input}</strong>.</p>`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Recommendation System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
-    }
-</script>
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+        }
+        nav {
+            background-color: #1e293b;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+        nav h1 {
+            font-size: 20px;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        .search-container input {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-container button {
+            padding: 8px 15px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .search-container button#btnClear {
+            background-color: #ef4444;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+        .card-grid {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            width: 280px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .card h3 {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .card p {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .team-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <h1>Travel Recommendation</h1>
+        </div>
+        <ul>
+            <li><a href="#home">Rumah</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Enter beach or keyword">
+            <button id="btnSearch" onclick="searchRecommendation()">Search</button>
+            <button id="btnClear" onclick="clearSearch()">Clear</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home">
+            <h2>Selamat Datang di Travel Recommendation System</h2>
+            <p style="margin-bottom: 15px;">Temukan destinasi wisata impian Anda berdasarkan rekomendasi kategori pilihan kami.</p>
+            
+            <div id="results"></div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Kami adalah tim pengembang yang berdedikasi untuk memberikan rekomendasi tempat wisata terbaik di seluruh dunia bagi para pelancong.</p>
+            
+            <h3 style="margin-top: 20px;">Tim Kami</h3>
+            <div class="team-grid">
+                <div class="team-card">
+                    <h4>Imam Novtiananda</h4>
+                    <p>Lead Developer</p>
+                </div>
+                <div class="team-card">
+                    <h4>Tim Anggota</h4>
+                    <p>UI/UX & Content</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <form onsubmit="alert('Pesan Anda telah terkirim!'); return false;" style="display: flex; flex-direction: column; gap: 10px;">
+                <label for="name">Nama:</label>
+                <input type="text" id="name" required style="padding: 8px;">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" required style="padding: 8px;">
+
+                <label for="message">Pesan:</label>
+                <textarea id="message" rows="4" required style="padding: 8px;"></textarea>
+
+                <button type="submit" style="padding: 10px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Kirim Pesan</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        function searchRecommendation() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const results = document.getElementById('results');
+            
+            if (input.includes('beach') || input.includes('pantai')) {
+                results.innerHTML = `
+                    <div class="card-grid">
+                        <div class="card">
+                            <img src="https://picsum.photos/id/1015/400/250" alt="Bora Bora Beach">
+                            <h3>Bora Bora Beach</h3>
+                            <p>Pantai indah dengan air laut jernih dan pemandangan luar biasa di Polynesia Prancis.</p>
+                        </div>
+                        <div class="card">
+                            <img src="https://picsum.photos/id/1039/400/250" alt="Copacabana Beach">
+                            <h3>Copacabana Beach</h3>
+                            <p>Pantai terkenal di Rio de Janeiro dengan pasir putih dan suasana yang sangat meriah.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (input.trim() === "") {
+                results.innerHTML = "<p>Silakan masukkan kata kunci pencarian (contoh: <strong>beach</strong>).</p>";
+            } else {
+                results.innerHTML = `<p>Tidak ditemukan rekomendasi untuk <strong>${input}</strong>.</p>`;
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('results').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
